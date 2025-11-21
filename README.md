@@ -43,6 +43,7 @@ pip install prompt-toolkit
 
 ```python
 from jsondb import JsonDB
+from jsondb.exceptions import TableExistsError, JsonDBError
 
 # Initialize the database
 db = JsonDB('my_database.json')
@@ -68,9 +69,9 @@ try:
     # Show final data
     db.show_data('users')
 
-except db.TableExistsError as e:
+except TableExistsError as e:
     print(f"Setup failed because a table already exists: {e}")
-except db.Error as e: # Catch any library-specific error
+except JsonDBError as e: # Catch any library-specific error
     print(f"An error occurred with the database: {e}")
 except Exception as e:
     print(f"A general error occurred: {e}")
