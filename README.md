@@ -43,10 +43,91 @@ pip install prompt-toolkit
 
 ```python
 from jsondb import JsonDB
+from jsondb.exceptions import TableExistsError, JsonDBError
 
 # Initialize the database
 db = JsonDB('my_database.json')
 
+try:
+    # Create a table
+    db.create_table('users')
+
+    # Insert data
+    db.insert_data('users', {'id': 1, 'name': 'Alice', 'role': 'admin'})
+    db.insert_data('users', {'id': 2, 'name': 'Bob', 'role': 'user'})
+
+    # Update data where role is 'user'
+    db.update_data(
+        'users',
+        condition=lambda user: user.get('role') == 'user',
+        new_data={'id': 2, 'name': 'Bob', 'role': 'member'}
+    )
+
+    # Delete data where id is 1
+    db.delete_data('users', condition=lambda user: user.get('id') == 1)
+
+    # Show final data
+    db.show_data('users')
+
+except TableExistsError as e:
+    print(f"Setup failed because a table already exists: {e}")
+except JsonDBError as e: # Catch any library-specific error
+    print(f"An error occurred with the database: {e}")
+except Exception as e:
+    print(f"A general error occurred: {e}")
+
+```
+
+### Interactive REPL (CLI)
+
+The library includes a powerful interactive REPL (Read-Eval-Print Loop) to manage your databases from the command line.
+
+**Launching the REPL:**
+
+```bash
+# Start the REPL in the main menu
+jsondb
+
+# Or open a database file directly
+jsondb ./path/to/your/database.json
+```
+
+**Key Features:**
+
+*   **Interactive Management:** Create, edit, and manage your JSON databases without writing Python code.
+*   **Smart Auto-Completion:** Press `Tab` to get suggestions for commands, file paths, and table names.
+*   **Command History:** Use the Up/Down arrow keys to navigate your command history.
+*   **User-Friendly Interface:** A colorized and structured interface makes database management easy.
+*   **Built-in Help:** Type `.help` in any mode to see a list of available commands.
+*   **Safe Operations:** Features auto-saving on exit and automatic backup creation to prevent data loss.
+
+**Example Session:**
+
+```bash
+$ jsondb
+🌟 JsonDB >>> .build
+📁 Enter database path (example: data/mydb.json): users.json
+✅ Database 'users.json' created/opened successfully!
+💡 Use '.create <table_name>' to create a new table
+📦 [users.json] >>> .create people
+✅ Table 'people' created successfully!
+📦 [users.json] >>> .use people
+✅ Successfully selected table 'people'!
+💡 Use '.insert' to add data
+📋 [people] >>> .insert
+# ... interactive prompt to add data ...
+✅ Data added successfully!
+📋 [people] >>> .show
+# ... displays table data ...
+📋 [people] >>> .exit
+💾 Performing auto-save before exiting...
+👋 Thank you for using JsonDB REPL!
+💾 Your data has been safely saved
+```
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/Elang-elang/JsonDB-Python/blob/main/LICENSE) file for details.
 try:
     # Create a table
     db.create_table('users')
