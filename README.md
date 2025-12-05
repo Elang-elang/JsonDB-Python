@@ -128,6 +128,7 @@ $ jsondb
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/Elang-elang/JsonDB-Python/blob/main/LICENSE) file for details.
+```python
 try:
     # Create a table
     db.create_table('users')
